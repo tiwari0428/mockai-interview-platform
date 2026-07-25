@@ -2,7 +2,15 @@
 
 MockAI is an AI-powered interview preparation platform that simulates real-world technical and behavioral interviews using LLMs. The platform evaluates candidate responses through speech transcription, resume-aware question generation, confidence analysis, and detailed performance reports to help users prepare for software engineering interviews.
 
+## Highlights
 
+- 🤖 AI-powered HR, DSA, Resume, and Company-specific mock interviews
+- 🎤 Live speech transcription and voice analysis
+- 📄 Resume-aware interview question generation
+- 📊 Performance dashboard with interview analytics
+- 🔐 Secure JWT authentication and MongoDB persistence
+- 📈 Detailed AI-generated interview reports
+  
 ## Why MockAI?
 
 Preparing for interviews usually requires another person.
