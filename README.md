@@ -1,6 +1,13 @@
-# MockAI Interview Simulator
+# 🤖 MockAI Interview Simulator
 
-MockAI is a full-stack AI interview simulator for students preparing for HR, DSA, resume-based, and company-style interviews. It includes JWT auth, MongoDB persistence, AI-powered question and feedback generation, live speech transcription, webcam readiness, resume upload, reports, and a modern React dashboard.
+MockAI is an AI-powered interview preparation platform that simulates real-world technical and behavioral interviews using LLMs. The platform evaluates candidate responses through speech transcription, resume-aware question generation, confidence analysis, and detailed performance reports to help users prepare for software engineering interviews.
+
+
+## Why MockAI?
+
+Preparing for interviews usually requires another person.
+
+MockAI allows candidates to practice independently through AI-generated interviews while receiving detailed feedback and performance analytics.
 
 ## Stack
 
@@ -127,6 +134,15 @@ VITE_API_URL=http://localhost:5000/api
 
 - `POST /api/resume/upload`
 - `GET /api/resume/me`
+
+Upcoming Features
+
+• Voice AI interviewer
+• Vapi integration
+• Company-specific interview datasets
+• PDF report generation
+• Multi-language interviews
+
 
 ## Notes
 
