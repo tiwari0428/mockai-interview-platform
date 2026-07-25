@@ -1,0 +1,54 @@
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@600;700;800&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  body {
+    @apply m-0 bg-ink font-body text-slate-100 antialiased;
+    background-image: theme("backgroundImage.mesh");
+    min-height: 100vh;
+  }
+
+  * {
+    @apply border-slate-800;
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    @apply font-body;
+  }
+}
+
+@layer components {
+  .shell {
+    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+
+  .panel {
+    @apply rounded-3xl border border-white/10 bg-white/5 backdrop-blur-md;
+  }
+
+  .panel-soft {
+    @apply rounded-2xl border border-white/10 bg-slate-900/70;
+  }
+
+  .button-primary {
+    @apply inline-flex items-center justify-center rounded-xl bg-brand-500 px-5 py-3 text-sm font-semibold text-white transition hover:bg-brand-400;
+  }
+
+  .button-secondary {
+    @apply inline-flex items-center justify-center rounded-xl border border-white/15 bg-white/5 px-5 py-3 text-sm font-semibold text-slate-100 transition hover:bg-white/10;
+  }
+
+  .input {
+    @apply w-full rounded-xl border border-white/10 bg-slate-950/70 px-4 py-3 text-sm text-slate-100 outline-none ring-0 placeholder:text-slate-500 focus:border-brand-400;
+  }
+}
