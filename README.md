@@ -1,81 +1,82 @@
-# 🤖 MockAI Interview Simulator
+# MockAI — AI-Powered Mock Interview Platform
 
-MockAI is an AI-powered interview preparation platform that simulates real-world technical and behavioral interviews using LLMs. The platform evaluates candidate responses through speech transcription, resume-aware question generation, confidence analysis, and detailed performance reports to help users prepare for software engineering interviews.
+MockAI is a full-stack interview preparation platform that simulates real technical and behavioral interviews using AI. It generates questions tailored to the interview mode and the candidate's resume, evaluates spoken responses through live speech and webcam analysis, and produces a detailed performance report at the end of each session.
+
+**[Live Demo](https://mockai-interview-platform.vercel.app/)** · **[Report a Bug](https://github.com/tiwari0428/mockai/issues)**
+
+---
 
 ## Highlights
 
-- 🤖 AI-powered HR, DSA, Resume, and Company-specific mock interviews
-- 🎤 Live speech transcription and voice analysis
-- 📄 Resume-aware interview question generation
-- 📊 Performance dashboard with interview analytics
-- 🔐 Secure JWT authentication and MongoDB persistence
-- 📈 Detailed AI-generated interview reports
-  
+- 🎙️ Voice-driven interviews across 6 modes: HR, DSA, Resume-based, Google, Amazon Leadership, and Meta Behavioral
+- 🧠 AI-generated questions and feedback (Gemini or OpenAI), with resilient fallback generation when no API key is configured
+- 📄 Resume-aware question generation — parses uploaded PDF/DOCX resumes to extract skills, projects, and experience
+- 📊 Live performance coaching combining webcam eye-contact tracking, speaking pace, and filler-word detection
+- 📈 Performance dashboard with score trends and communication analytics (custom SVG charts, no charting library)
+- 🔐 Secure JWT authentication with bcrypt password hashing and strict per-user data isolation
+
 ## Why MockAI?
 
-Preparing for interviews usually requires another person.
+Practicing interviews out loud usually requires another person. MockAI lets candidates practice independently — through AI-generated, voice-driven interviews — while getting detailed, structured feedback on both what they said and how they said it.
 
-MockAI allows candidates to practice independently through AI-generated interviews while receiving detailed feedback and performance analytics.
+---
 
-## Stack
+## Tech Stack
 
-- Frontend: React + Vite + Tailwind CSS
-- Backend: Node.js + Express
-- Database: MongoDB + Mongoose
-- Auth: JWT + bcrypt
-- AI: OpenAI or Gemini with resilient fallback generation
-- Voice: Web Speech API
-- Resume Parsing: `pdf-parse`
-- Charts: Recharts
+| Layer | Technology |
+|---|---|
+| Frontend | React, Vite, Tailwind CSS, React Router |
+| Backend | Node.js, Express.js |
+| Database | MongoDB, Mongoose |
+| Auth | JWT, bcrypt |
+| AI | OpenAI or Google Gemini, with resilient fallback generation |
+| Voice | Web Speech API (SpeechRecognition + SpeechSynthesis) |
+| Resume Parsing | pdf-parse (backend), pdfjs-dist / mammoth (frontend) |
+| Charts | Custom SVG-based charts (no charting library) |
+| Deployment | Vercel (frontend), Render (backend), MongoDB Atlas |
+
+---
 
 ## Project Structure
 
 ```text
 Mockai/
   backend/
+    src/
+      config/          # Database connection
+      controllers/      # Route handlers
+      middleware/        # Auth, validation, error handling
+      models/             # Mongoose schemas
+      routes/              # API route definitions
+      services/            # AI integration (aiService.js)
+      utils/                 # Scoring logic, JWT helpers
   frontend/
+    src/
+      components/       # Reusable UI components
+      context/            # Auth context
+      pages/                # Route-level pages
+      services/              # Speech + interview AI helpers
+      utils/                   # Resume parsing, interview config
   README.md
 ```
 
-## Backend Setup
+---
 
-1. Open a terminal in [backend](backend).
-2. Create a `.env` file from [.env.example](backend/.env.example).
-3. Install dependencies:
+## Getting Started
+
+### Prerequisites
+- Node.js 18+
+- A MongoDB connection string (Atlas or local)
+- A free Google Gemini API key ([Google AI Studio](https://aistudio.google.com)) and/or an OpenAI API key
+
+### Backend Setup
 
 ```bash
+cd backend
 npm install
 ```
 
-4. Start the backend:
-
-```bash
-npm run dev
-```
-
-Backend runs on `http://localhost:5000`.
-
-## Frontend Setup
-
-1. Open a terminal in [frontend](frontend).
-2. Create a `.env` file from [.env.example](frontend/.env.example).
-3. Install dependencies:
-
-```bash
-npm install
-```
-
-4. Start the frontend:
-
-```bash
-npm run dev
-```
-
-Frontend runs on `http://localhost:5173`.
-
-## Environment Variables
-
-Backend `.env`:
+Create `backend/.env`:
 
 ```env
 PORT=5000
@@ -83,77 +84,128 @@ CLIENT_URL=http://localhost:5173
 MONGODB_URI=mongodb://127.0.0.1:27017/ai-interview-simulator
 JWT_SECRET=replace_with_a_long_random_secret
 JWT_EXPIRES_IN=7d
-AI_PROVIDER=openai
+AI_PROVIDER=gemini
 OPENAI_API_KEY=
 GEMINI_API_KEY=
 OPENAI_MODEL=gpt-4o-mini
 GEMINI_MODEL=gemini-3.5-flash
 ```
 
-Frontend `.env`:
+```bash
+npm run dev
+```
+
+Backend runs on `http://localhost:5000`.
+
+### Frontend Setup
+
+```bash
+cd frontend
+npm install
+```
+
+Create `frontend/.env`:
 
 ```env
 VITE_API_URL=http://localhost:5000/api
 ```
 
+```bash
+npm run dev
+```
+
+Frontend runs on `http://localhost:5173`.
+
+---
+
+## Architecture
+
+```
+Frontend (React/Vite) ──REST API──▶ Backend (Express)
+                                          │
+                              ┌───────────┼───────────┐
+                              ▼           ▼           ▼
+                          MongoDB    Gemini/OpenAI  Web Speech API
+                          (Atlas)   (question gen  (browser-native,
+                                    + feedback)     no server cost)
+```
+
+Every AI call is wrapped with fallback logic — if the configured provider is unavailable, rate-limited, or missing an API key, the app automatically falls back to curated, mode-specific question and feedback generation so the app keeps working.
+
+---
+
 ## Features
 
 - Secure register/login flow with JWT-protected APIs
-- Separate user-owned interview sessions, answers, resumes, and reports
-- Interview modes:
-  - HR Interview
-  - DSA Interview
-  - Resume-based Interview
-  - Google Mode
-  - Amazon Leadership Mode
-  - Meta Behavioral Mode
-- AI-generated questions from OpenAI or Gemini
-- AI-generated feedback with fallback logic when API keys are missing
-- Mock interview room with:
-  - one-question-at-a-time flow
-  - transcript capture using Web Speech API
-  - timer
-  - answer persistence
-  - voice analysis preview
-  - webcam readiness panel
-- Resume upload with PDF text extraction
-- Dashboard with session statistics and confidence chart
-- Interview report with scores, strengths, weaknesses, suggestions, and roadmap
-- Downloadable JSON recruiter-style report export
+- Per-user data isolation across all interview sessions, answers, resumes, and reports
+- Interview modes: HR, DSA, Resume-based, Google, Amazon Leadership, Meta Behavioral
+- AI-generated questions and feedback via OpenAI or Gemini, with fallback logic when no API key is configured
+- Live interview room with:
+  - one-question-at-a-time flow with the question spoken aloud
+  - live transcript capture via Web Speech API
+  - session timer and progress tracking
+  - real-time webcam eye-contact and face-visibility tracking
+  - live confidence, pace, and filler-word scoring
+- Resume upload with PDF/DOCX text extraction and pattern-based parsing (skills, projects, experience, education, certifications)
+- Dashboard with session statistics, score trend charts, and communication analytics
+- Detailed interview report with scores, strengths, weaknesses, suggestions, and an improvement roadmap
+- Structured JSON report export for recruiter-review workflows
+
+---
 
 ## API Overview
 
 ### Auth
-
 - `POST /api/auth/register`
 - `POST /api/auth/login`
 - `GET /api/auth/me`
 
 ### Interview
-
 - `POST /api/interview/generate-questions`
 - `POST /api/interview/start`
 - `POST /api/interview/save-answer`
 - `POST /api/interview/finish`
 - `GET /api/interview/history`
+- `GET /api/interview/session/:id`
 - `GET /api/interview/report/:id`
 
 ### Resume
-
 - `POST /api/resume/upload`
 - `GET /api/resume/me`
 
-Upcoming Features
+---
 
-• Voice AI interviewer
-• Vapi integration
-• Company-specific interview datasets
-• PDF report generation
-• Multi-language interviews
+## Key Design Decisions
 
+- **Live feedback is rule-based, not LLM-based.** Real-time scoring during an interview (eye contact, pace, filler words) uses a weighted formula for speed and zero marginal cost — the LLM is reserved for the final, deeper feedback report generated once per session.
+- **AI calls always have a fallback.** Every provider call is wrapped so that if the model is unavailable, rate-limited, or the API key is missing, the app falls back to hand-written, mode-specific question and feedback generation instead of failing.
+- **Ownership checks on every query.** Every database read/write involving a user's session, answer, resume, or report filters by the authenticated user's ID — never by a client-supplied value.
+- **Provider-agnostic AI layer.** `AI_PROVIDER` switches between Gemini and OpenAI without touching controller code, so swapping providers is a config change, not a rewrite.
 
-## Notes
+---
 
-- The webcam analysis layer is intentionally structured so `face-api.js` or OpenCV can be integrated later without changing page flow or API shapes.
-- If no AI API key is configured, the platform still works locally using backend fallback question and feedback generation.
-- Report download currently exports structured JSON, which is practical for recruiter-review pipelines and can be extended to PDF later.
+## Known Limitations
+
+- Voice recognition relies on the browser's built-in `SpeechRecognition` API, which works best in Chrome/Edge and has reduced accuracy on long, continuous answers (the UI includes a note encouraging typing for longer responses).
+- No rate limiting on authentication endpoints yet — planned for a future update.
+- Live coaching scores are heuristic-based rather than AI-generated, by design, to keep feedback instant and free.
+- Webcam analysis is intentionally structured so a face-detection library (e.g. face-api.js) can be integrated later without changing page flow or API shapes.
+
+---
+
+## Roadmap
+
+- Move speech recognition to a dedicated streaming STT service (e.g. Deepgram) for improved accuracy on longer answers
+- Add rate limiting on authentication endpoints
+- PDF export for interview reports (currently JSON)
+- Company-specific interview question datasets
+
+---
+
+## License
+
+This project is open source and available under the [MIT License](LICENSE).
+
+---
+
+*Built by [Akanksha Tiwari](https://github.com/tiwari0428)*
